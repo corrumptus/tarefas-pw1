@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <title>Exercícios de fixação - eventos</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: aliceblue;
+        }
+        body > div {
+            background-color: #a8a29e;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            background-color: #334938;
+            height: 90px;
+            color: #2dfa6d;
+            font-size: 35px;
+            width: 173px;
+            margin-bottom: 7px;
+            box-shadow: inset 3px 4px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        td {
+            width: 33%;
+            height: 100%;
+        }
+        button {
+            width: 100%;
+            height: 3em;
+            background-color: gray;
+            color: black;
+            border-color: gray;
+            font-size: initial;
+            font-weight: 700;
+        }
+        button:active {
+            background-color: rgb(153, 153, 153);
+        }
+        h2 {
+            margin: 0px;
+        }
+        h1 {
+            margin: 0px;
+        }
+        .animated {
+            animation: clicking 0.5s;
+        }
+
+        @keyframes clicking {
+            0%, 100% {
+                background-color: gray;
+            }
+            50% {
+                background-color:rgba(0, 0, 0, 0.4);
+            }
+        }
+    </style>
+    <script type="text/javascript">
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <input type="text" name="telefone">
+        <table>
+            <tr>
+                <td><button>1</button></td>
+                <td><button>2<div>ABC</div></button></td>
+                <td><button>3<div>DEF</div></button></td>
+            </tr>
+            <tr>
+                <td><button>4<div>GHI</div></button></td>
+                <td><button>5<div>JKL</div></button></td>
+                <td><button>6<div>MNO</div></button></td>
+            </tr>
+            <tr>
+                <td><button>7<div>PQRS</div></button></td>
+                <td><button>8<div>TUV</div></button></td>
+                <td><button>9<div>WXYZ</div></button></td>
+            </tr>
+            <tr>
+                <td><button>↑</button></td>
+                <td><button>0</button></td>
+                <td><button>←</button></td>
+            </tr>
+        </table>
+    </div>
+    <h2>O seu número é:</h4>
+    <h1></h1>
+
+    <script>
+        let h = document.querySelector("h1");
+        let input = document.querySelector("input");
+        let buttons = document.querySelectorAll("button");
+
+        for (let button of buttons) {
+            button.addEventListener("click", () => {
+                let div = button.innerText[0];
+                if (div == "←") {
+                    h.innerText = h.innerText.slice(0, h.innerText.length-1);
+                    input.value = input.value.slice(0, input.value.length-1);
+                } else {
+                    h.innerText += div;
+                    input.value += div;
+                }
+                
+            });
+        };
+        
+        input.addEventListener("input", () => {
+            let last = input.value[input.value.length-1];
+            if (h.innerText.length > input.value.length) {
+                h.innerText = h.innerText.slice(0, input.value.length);
+                click("←");
+            } else if ((last >= "a" && last <= "z") || (last >= "A" && last <= "Z")) {
+                h.innerText += convert(last);
+                click(convert(last));
+            } else if (last >= 0 && last <= 9) {
+                h.innerText += last;
+                click(last);
+            } else {
+                input.value = input.value.slice(0, input.value.length-1);
+            };
+        });
+
+        function convert(letra) {
+            letra = letra.toLowerCase();
+            if (letra == "a" || letra == "b" || letra == "c") {
+                return 2;
+            } else if (letra == "d" || letra == "e" || letra == "f") {
+                return 3;
+            } else if (letra == "g" || letra == "h" || letra == "i") {
+                return 4;
+            } else if (letra == "j" || letra == "k" || letra == "l") {
+                return 5;
+            } else if (letra == "m" || letra == "n" || letra == "o") {
+                return 6;
+            } else if (letra == "p" || letra == "q" || letra == "r" || letra == "s") {
+                return 7;
+            } else if (letra == "t" || letra == "u" || letra == "v") {
+                return 8;
+            } else if (letra == "w" || letra == "x" || letra == "y" || letra == "z") {
+                return 9;
+            }
+        };
+
+        function click(val) {
+            for (let button of buttons) {
+                if (val == button.innerText[0]) {
+                    button.setAttribute("class", "");
+                    setTimeout(() => {
+                        button.setAttribute("class","animated");
+                    });
+                };
+            };
+        };
+
+    </script>
+</body>
+
+</html>
