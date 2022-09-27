@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletim IFSP</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: system-ui;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            width: 400px;
+            height: 25px;
+        }
+        button {
+            border: none;
+            height: 25px;
+            margin: 5px;
+        }
+        .title {
+            font-size: 40px;
+        }
+        .quanti {
+            font-size: 20px;
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+    <header class='title'>Boletim IFSP</header>
+    <main>
+        <section>
+            <p class ='quanti'>Quantidade</p>
+            <input type="number" placeholder="Digite a quantidade"><br>
+        </section>
+        <button id="cad">Cadastrar</button>
+    </main>
+    <footer>
+        <section>
+            <button id="add">Adicionar</button>
+            <button id="rem">Remover</button>
+            <button id="rempm">Remover pior média</button>
+        </section>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>Nota 1</th>
+                <th>Nota 2</th>
+                <th>Nota 3</th>
+                <th>Média</th>
+                <th>Resultado</th>
+            </tr>
+        </table>
+    </footer>
+    
+    <script>
+        let cad = document.querySelector("#cad");
+        let add = document.querySelector("#add");
+        let rem = document.querySelector("#rem");
+        let rempm = document.querySelector("#rempm");
+
+        let inp = document.querySelector("input");
+
+        let fot = document.querySelector("footer");
+        let tab = document.querySelector("tbody");
+
+        function rand() {
+            let n = (Math.random() * 101)/10;
+            if(n > 10) {
+                return 10;
+            }
+            return n.toString().slice(0, 4);
+        }
+
+        function color() {
+
+        }
+
+        function result(med) {
+            if (med >= 6) {
+                return "Aprovado"
+            } else if (med < 6 && med >= 4) {
+                return "Em recuperação"
+            } else {
+                return "Reprovado"
+            }
+        }
+
+        function addf(q=1) {
+            console.log("here");
+            for (let i=0; i<q; i++) {
+                tab.innerHTML += `<tr>
+                    <td>Aluno ${document.querySelectorAll("tr").length-1}</td>
+                    <td>${val1 = rand()}</td>
+                    <td>${val2 = rand()}</td>
+                    <td>${val3 = rand()}</td>
+                    <td>${med = (val1+val2+val3)/3}</td>
+                    <td>${resultado = result(med)}</td>
+                    </tr>`;
+            }
+            color();
+        }
+        
+        cad.addEventListener("click", () => {
+                addf(inp.value);
+                inp.value = '';
+            });
+        
+    </script>
+</body>
+</html>
