@@ -114,7 +114,6 @@
         }
 
         function addf(q=1) {
-            console.log("here");
             for (let i=0; i<q; i++) {
                 tab.innerHTML += `<tr>
                     <td>Aluno ${alu = document.querySelectorAll("tr").length-1}</td>
@@ -129,10 +128,23 @@
         }
         
         cad.addEventListener("click", () => {
-                addf(inp.value);
-                inp.value = '';
-            });
-        
+            addf(inp.value);
+            inp.value = '';
+        });
+        add.addEventListener("click", () => {
+            addf();
+        });
+        rem.addEventListener("click", () => {
+            let trs = document.querySelectorAll("tr");
+            if (trs.length > 1) {
+                trs[trs.length-1].remove();
+            } else {
+                // deixa o footer invisível
+            }
+        });
+        rempm.addEventListener("click", () => {
+            //procura a pior média e dps remove
+        });
     </script>
 </body>
 </html>
