@@ -1,27 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boletim IFSP</title>
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: system-ui;
+            margin: 0px;
+            background-color: #111827;
+        }
+        header {
+            color: #fafaf9;
+        }
+        p {
+            color: #fafaf9;
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            width: 400px;
+            height: 25px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            border: none;
+            height: 25px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #fff7ed;
+            font-size: 17px;
+        }
         footer {
-            box-shadow: -1px 5px 10px 0px #c7c7c7;
+            display: none;
+            box-shadow: 0px 2px 20px 0px #d1cccc;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            background-color: #404040;
+        }
+        table {
+            width: 100%;
+        }
+        tr {
+            width: 100%
+        }
+        td {
+            display: table-cell;
+            text-align: -webkit-center;
+        }
+        td#aluno, th {
+            color: #d4d4d4;
+        }
+        .title {
+            font-size: 40px;
         }
     </style>
 </head>
 <body>
-    <header>Boletim IFSP</header>
+    <header class='title'>Boletim IFSP</header>
     <main>
-        <p>Quantidade</p>
-        <input type="number">
-        <button>Cadastrar</button>
+        <section>
+            <p class ='quanti'>Quantidade</p>
+            <input type="number" placeholder="Digite a quantidade"><br>
+        </section>
+        <button id="cad">Cadastrar</button>
     </main>
-    <footer hidden>
-        <button>Adicionar</button>
-        <button>Remover</button>
-        <button>Remover pior média</button>
+    <footer>
+        <section>
+            <button id="add">Adicionar</button>
+            <button id="rem">Remover</button>
+            <button id="rempm">Remover pior média</button>
+        </section>
         <table>
             <tr>
                 <th>Nome</th>
@@ -33,5 +93,106 @@
             </tr>
         </table>
     </footer>
+    
+    <script>
+        let cad = document.querySelector("#cad");
+        let add = document.querySelector("#add");
+        let rem = document.querySelector("#rem");
+        let rempm = document.querySelector("#rempm");
+
+        let inp = document.querySelector("input");
+
+        let fot = document.querySelector("footer");
+        let tab = document.querySelector("tbody");
+
+        function rand() {
+            let n = (Math.random() * 101)/10;
+            if(n > 10) {
+                return 10;
+            }
+            return Number(n.toString().slice(0, 4));
+        }
+
+        function color() {
+            for (let td of document.querySelectorAll("td[id]")) {
+                if (td.innerText >= 6 || td.innerText == "Aprovado") {
+                    td.style.color = "#10b981";
+                } else if ((td.innerText < 6 && td.innerText >= 4) || td.innerText == "Em recuperação") {
+                    td.style.color = "#d97706";
+                } else if (td.innerText < 4 || td.innerText == "Reprovado"){
+                    td.style.color = "#b91c1c";
+                }
+            };
+        }
+
+        function result(med) {
+            if (med >= 6) {
+                return "Aprovado"
+            } else if (med < 6 && med >= 4) {
+                return "Em recuperação"
+            } else {
+                return "Reprovado"
+            }
+        }
+
+        function addf(q=1) {
+            for (let i=0; i<q; i++) {
+                tab.innerHTML += `<tr>
+                    <td id="aluno">Aluno ${alu = document.querySelectorAll("tr").length-1}</td>
+                    <td id="nota">${val1 = rand()}</td>
+                    <td id="nota">${val2 = rand()}</td>
+                    <td id="nota">${val3 = rand()}</td>
+                    <td id="media">${med = Number(((val1+val2+val3)/3).toString().slice(0, 4))}</td>
+                    <td id="resultado">${resultado = result(med)}</td>
+                    </tr>`;
+            }
+            if (q != 0) {
+                color();
+                fot.style.display = "flex";
+            }
+            
+        }
+
+        function remover(n) {
+            let trs = document.querySelectorAll("tr");
+            if (trs.length > 2) {
+                trs[n].remove();
+            } else if (trs.length == 2) {
+                trs[n].remove();
+                fot.style.display = "none";
+            }else {
+                fot.style.display = "none";
+            }
+        }
+        
+        cad.addEventListener("click", () => {
+            addf(inp.value);
+            inp.value = '';
+        });
+
+        add.addEventListener("click", () => {
+            addf();
+        });
+
+        rem.addEventListener("click", () => {
+            let trs = document.querySelectorAll("tr");
+            remover(trs.length-1);
+        });
+
+        rempm.addEventListener("click", () => {
+            let medias = document.querySelectorAll("#media");
+            let worst = [11,0];
+            for (let media in medias) {
+                if (medias[media].innerText < worst[0]) {
+                    worst = [medias[media].innerText, media];
+                }
+            }
+            remover(Number(worst[1])+1);
+            let alunos = document.querySelectorAll("#aluno");
+            for (let aluno in alunos ) {
+                alunos[aluno].innerText = `Aluno ${aluno}`;
+            }
+        });
+    </script>
 </body>
 </html>
