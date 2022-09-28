@@ -78,11 +78,29 @@
             if(n > 10) {
                 return 10;
             }
-            return n.toString().slice(0, 4);
+            return Number(n.toString().slice(0, 4));
         }
 
         function color() {
-
+            for (let td of document.querySelectorAll("td[id]")) {
+                if (td.id == "nota" || td.id == "media") {
+                    if (td.innerText >= 6) {
+                        td.style.color = "green";
+                    } else if (td.innerText < 6 && td.innerText >= 4) {
+                        td.style.color = "orange";
+                    } else {
+                        td.style.color = "red";
+                    }
+                } else {
+                    if (td.innerText == "Aprovado") {
+                        td.style.color = "green";
+                    } else if (td.innerText == "Em recuperação") {
+                        td.style.color = "orange";
+                    } else {
+                        td.style.color = "red";
+                    }
+                }
+            };
         }
 
         function result(med) {
@@ -99,12 +117,12 @@
             console.log("here");
             for (let i=0; i<q; i++) {
                 tab.innerHTML += `<tr>
-                    <td>Aluno ${document.querySelectorAll("tr").length-1}</td>
-                    <td>${val1 = rand()}</td>
-                    <td>${val2 = rand()}</td>
-                    <td>${val3 = rand()}</td>
-                    <td>${med = (val1+val2+val3)/3}</td>
-                    <td>${resultado = result(med)}</td>
+                    <td>Aluno ${alu = document.querySelectorAll("tr").length-1}</td>
+                    <td id="nota">${val1 = rand()}</td>
+                    <td id="nota">${val2 = rand()}</td>
+                    <td id="nota">${val3 = rand()}</td>
+                    <td id="media">${med = Number(((val1+val2+val3)/3).toString().slice(0, 4))}</td>
+                    <td id="resultado">${resultado = result(med)}</td>
                     </tr>`;
             }
             color();
