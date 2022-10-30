@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletim 2.0</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: system-ui;
+            margin: 0px;
+            background-color: #1b1b1b;
+        }
+        header {
+            color: #ffedd5;
+            font-size: 44px;
+        }
+        p {
+            color: #fafaf9;
+            margin-bottom: 5px;
+            font-size: 20px;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        footer {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            width: 400px;
+            height: 25px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            border: none;
+            height: 25px;
+            margin: 10px;
+            border-radius: 5px;
+            background-color: #fff7ed;
+            font-size: 17px;
+        }
+        div {
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 5px;
+        }
+        footer main {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: center;
+        }
+        footer main section {
+            margin: 10px;
+        }
+        section button {
+            width: 100%;
+            margin: 0px;
+            height: auto;
+            background-color: transparent;
+            border-radius: 0px
+        }
+        div header {
+            font-size: 20px;
+            margin-bottom: 5px
+        }
+        div p {
+            margin: 0px;
+            margin-bottom: 5px;
+        }
+        .grid-content {
+            display: grid;
+            grid-template-areas: 
+                'men cont mai'
+                'men cont mai'
+                'men rem mai';
+            grid-gap: 0px;
+        }
+        .men {
+            grid-area: men;
+            width: 100%;
+            font-size: 30px;
+        }
+        .rem {
+            grid-area: rem;
+            width: 100%;
+            font-size: 20px;
+        }
+        .rem:hover {
+            box-shadow: 0px 10px 10px -3px #ffa6a6;
+        }
+        .mai {
+            grid-area: mai;
+            width: 100%;
+            font-size: 30px;
+        }
+        
+    </style>
+</head>
+<body>
+    <header class='title'>Boletim IFSP</header>
+    <main>
+        <section>
+            <p class ='quanti'>Quantidade</p>
+            <input type="number" placeholder="Digite a quantidade"><br>
+        </section>
+        <button id="cad">Cadastrar</button>
+    </main>
+
+    <footer>
+        <header>
+            <button id="add">Adicionar</button>
+            <button id="rem">Remover</button>
+            <button id="rempm">Remover pior média</button>
+        </header>
+        <main></main>
+    </footer>
+    <script>
+        let cadB = $("main button");
+        let addB = $("#add");
+        let remB = $("#rem");
+        let rempmB = $("#rempm");
+        let inpN = $("input[type = number]");
+        let main = $("footer main");
+
+        function rand() {
+            let n = (Math.random() * 101)/10;
+            if(n > 10) {
+                return 10;
+            }
+            return Number(n.toString().slice(0, 4));
+        }
+
+        function color(n, i=0) {
+            if (n >= 6 && i==1)
+                return "#059669";
+            else if (n >= 4 && i==1)
+                return "#f97316";
+            else if (n < 4 && i==1)
+                return "#dc2626";
+            else if (n >= 6)
+                return "#86efac";
+            else if (n >= 4 && n < 6)
+                return "orange";
+            else if (n < 4)
+                return "#ffa6a6";
+        }
+
+        function adir(alus, i) {
+            let section = $("<section>");
+            section.addClass("grid-content");
+
+            let div = $("<div>");
+            div.addClass("cont");
+
+            let hed = $("<header>");
+            hed.text(`Aluno ${alus+i+1}`);
+
+            div.append(hed);
+
+            let p = $("<p>");
+            p.text(`Nota 1: ${nota1 = rand()}`);
+            p.css("color", color(nota1));
+            div.append(p);
+
+            p = $("<p>");
+            p.text(`Nota 2: ${nota2 = rand()}`);
+            p.css("color", color(nota2));
+            div.append(p);
+
+            p = $("<p>");
+            p.text(`Nota 3: ${nota3 = rand()}`);
+            p.css("color", color(nota3));
+            div.append(p);
+            
+            p = $("<p>");
+            p.text(`Média: ${media = Number(((nota1+nota2+nota3)/3).toString().slice(0, 4))}`);
+            p.css("color", color(media));
+            div.append(p);
+            
+            section.append(div);
+            section.css("background-color", color(media, 1));
+            main.append(section);
+            
+            section = $(`footer main section:nth-child(${$("footer main section").length})`);
+            let botmen = $("<button>");
+            botmen.text("-");
+            botmen.addClass("men");
+            botmen.click(() => {modiffunc(section, "-");});
+            section.append(botmen);
+            botmen.hover(() => {
+                media = 0;
+                for (let i=0;i<3;i++) {
+                    p = botmen.parent().children("div").children("p").eq(i);
+                    media += eval(`${p.text().slice(p.text().indexOf(": ")+2, p.text().length)}-1`);                    
+                }
+                media = Number((media/3).toString().slice(0, 4));
+                botmen.css("box-shadow", `${color(media)} -10px 0px 10px -3px`);
+            }
+            ,() => {
+                botmen.css("box-shadow", "none");
+            });
+
+            let botrem = $("<button>");
+            botrem.addClass("rem");
+            botrem.text("Remover");
+            botrem.click(() => {
+                botrem.parents("section").remove();
+                for (let i=0;i<$("footer main section").length;i++) {
+                    alu = $("footer main section").eq(i).children("div").children("header");
+                    alu.text(`Aluno ${i+1}`);
+                }
+            });
+            section.append(botrem);
+
+            let botmai = $("<button>");
+            botmai.addClass("mai");
+            botmai.text("+");
+            botmai.click(() => {modiffunc(section, "+");});
+            section.append(botmai);
+            botmai.hover(() => {
+                media = 0;
+                for (let i=0;i<3;i++) {
+                    p = botmai.parent().children("div").children("p").eq(i);
+                    media += eval(`${p.text().slice(p.text().indexOf(": ")+2, p.text().length)}+1`);
+                }
+                media = Number((media/3).toString().slice(0, 4));
+                botmai.css("box-shadow", `${color(media)} 10px 0px 10px -3px`);
+            }
+            ,() => {
+                botmai.css("box-shadow", "none");
+            });
+        }
+
+        function modiffunc(sec, sin) {
+            let med = 0;
+            let nota = 0;
+            for (let i=0;i<3;i++) {
+                ps = sec.children("div").children("p").eq(i);
+                nota = eval(`${ps.text().slice(ps.text().indexOf(": ")+2, ps.text().length)}${sin}1`);
+                if (sin == "-" && nota < 1)
+                    ps.text(`Nota ${i+1}: 0`);
+                else if (sin == "+" && nota > 9) {
+                    ps.text(`Nota ${i+1}: 10`);
+                    med += 10;
+                } else {
+                    ps.text(`Nota ${i+1}: ${Number(nota.toString().slice(0, 4))}`);
+                    med += nota;
+                }
+                ps.css("color", color(nota));
+            }
+            ps = sec.children("div").children("p").eq(3);
+            med = med/3;
+            ps.text(`Média: ${Number(med.toString().slice(0, 4))}`);
+            ps.css("color", color(med));
+            sec.css("background-color", color(med, 1));
+        }
+
+        cadB.click(() => {
+            $("footer").css("display", "flex");
+            let alus = $("footer main section").length;
+            for (let i=0;i<inpN.val();i++)
+                adir(alus, i);
+            inpN.val("");
+        });
+
+        addB.click(() => {
+            let alus = $("footer main section").length;
+            adir(alus, 1);
+        });
+
+        remB.click(() => {
+            let alus = $("footer main section");
+            alus.eq(alus.length-1).remove();
+            if ($("footer main section").length == 0)
+                $("footer").css("display", "none");
+        });
+
+        rempmB.click(() => {
+            let alus = $("footer main section");
+            let media = 10;
+            let pos = 0;
+            for (i=0;i<alus.length;i++) {
+                texto = $("footer main section").eq(i).children("div").children("p").eq(3).text();
+                med = Number(texto.slice(texto.indexOf(": ")+2, texto.length));
+                if (media > med) {
+                    media = med;
+                    pos = i;
+                }
+            }
+            $("footer main section").eq(pos).remove();
+            for (let i=0;i<$("footer main section").length;i++) {
+                alu = $("footer main section").eq(i).children("div").children("header");
+                alu.text(`Aluno ${i+1}`);
+            }
+            if ($("footer main section").length == 0)
+                $("footer").css("display", "none");
+        });
+    </script>
+</body>
+</html>
