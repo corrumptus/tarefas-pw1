@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebStorage</title>
+</head>
+<body>
+    <script>
+        let run = 1;
+        while (run) {
+            string = prompt("digite alguma coisa");
+            if (string === null || string === "")
+                run = 0;
+            else {
+                if (string === "clear")
+                    window.localStorage.clear();
+                else if (localStorage.getItem(string) === null)
+                    window.localStorage.setItem(string, "1");
+                else
+                    window.localStorage.removeItem(string);
+            }
+            console.log("-----------LocalStorage-----------");
+            if (window.localStorage.length > 0) {
+                for (let i=0;i<window.localStorage.length;i++)
+                    console.log(window.localStorage.key(i));
+            } else
+                console.log("Sem itens registrados");
+        }
+    </script>
+</body>
+</html>
