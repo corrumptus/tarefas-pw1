@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momentos</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: sans-serif;
+            margin: 0px;
+            background-color: darkgray;
+        }
+        h1 {
+            font-size: 40px;
+            margin: 20px 0px;
+        }
+        main {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 100%;
+            font-size: 30px;
+        }
+        main p {
+            margin: 5px 0px;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #3e3e3e;
+            border-radius: 20px;
+            padding: 10px;
+        }
+        .data, .hora {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .efeitinho {
+            position: absolute;
+            border: 6px solid #67d8a7;
+            border-radius: 50%;
+            top: 222px;
+            visibility: hidden;
+        }
+        input {
+            border-radius: 5px;
+            border-style: none;
+            background-color: #31bd72;
+            width: 100%;
+            height: 30px;
+            font-size: 20px;
+        }
+        input:hover {
+            box-shadow: 0px 0px 5px white;
+        }
+        footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0px 0px;
+        }
+        footer input {
+            width: 125px;
+            font-size: 30px;
+            height: 35px;
+            background-color: blueviolet;
+        }
+        footer p {
+            font-size: 25px;
+            border: 1px solid #5a5a5a;
+            border-radius: 9px;
+            padding: 10px;
+            box-shadow: inset 0px 0px 4px;
+        }
+
+        @keyframes efeito {
+            0% {
+                visibility: visible;
+                top: 229px;
+                width: 0px;
+                height: 0px;
+            }
+            100% {
+                visibility: hidden;
+                top: 119px;
+                width: 208px;
+                height: 208px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Timer</h1>
+    <main>
+        <section class="momentum inicial">
+            <header>Tempo 1</header>
+            <img src="https://wiki.teamfortress.com/w/images/9/97/Hellstone_Witching_Hour_2.png" width="200" height="200">
+            <div class="efeitinho inicial"></div>
+            <div class="data">
+                <p>Data</p>
+                <input type="date" id="date inicial">
+            </div>
+            <div class="hora">
+                <p>Hora</p>
+                <input type="time" id="time inicial">
+            </div>
+        </section>
+        <section class="momentum final">
+            <header>Tempo 2</header>
+            <img src="https://wiki.teamfortress.com/w/images/9/97/Hellstone_Witching_Hour_2.png" width="200" height="200">
+            <div class="efeitinho final"></div>
+            <div class="data">
+                <p>Data</p>
+                <input type="date" id="date final">
+            </div>
+            <div class="hora">
+                <p>Hora</p>
+                <input type="time" id="time final">
+            </div>
+        </section>
+    </main>
+    <footer class="momentum resultante">
+        <input type="button" value="calcular">
+        <p>0 anos, 0 meses, 0 dias, 0 horas, 0 minutos</p>
+    </footer>
+    <script>
+        let tempos = {
+            "date inicial": 0,
+            "date final": 0,
+            "time inicial": 0,
+            "time final": 0
+        }
+
+        function separaValor(datetime) {
+            if (datetime.indexOf("-") != -1)
+                return [Number(datetime.slice(0, 4)), Number(datetime.slice(5, 7)), Number(datetime.slice(8, 10))];
+            else
+                return [Number(datetime.slice(0, 2)), Number(datetime.slice(3, 5))];
+        }
+
+        function imprime_tempo(mins) {
+            let p = document.querySelector("footer p");
+            let anos = parseInt((mins/60/24/365).toString());
+            mins = mins - anos*365*24*60;
+            let meses = parseInt((mins/60/24/30).toString());
+            mins = mins - meses*30*24*60;
+            let dias = parseInt((mins/60/24).toString());
+            mins = mins - dias*24*60;
+            let horas = parseInt((mins/60).toString());
+            mins = mins - horas*60;
+            p.innerText = `${anos} anos, ${meses} meses, ${dias} dias, ${horas} horas, ${mins} minutos`;
+        }
+
+        function anima(momentum) {
+            if (tempos["date " + momentum] && tempos["time " + momentum]) {
+                let efeito = document.querySelector(".efeitinho." + momentum);
+                efeito.style.animation = "efeito 2s";
+                setTimeout(() => {efeito.style.animation = "";}, 2000);
+            }
+        }
+
+        let inps = document.querySelectorAll("input[id]");
+        for (input of inps) {
+            input.addEventListener("input", (e) => {
+                if (e.target.value !== '') {
+                    tempos[e.target.id] = separaValor(e.target.value);
+                    anima(e.target.id.slice(5));
+                } else
+                    tempos[e.target.id] = 0;
+                
+            });
+        };
+
+        let calc = document.querySelector("input[type=button]");
+        calc.addEventListener("click", () => {
+            if (tempos["date inicial"] && tempos["date final"] && tempos["time inicial"] && tempos["time final"]) {
+                dataI = new Date(...tempos["date inicial"], ...tempos["time inicial"]);
+                dataF = new Date(...tempos["date final"], ...tempos["time final"]);
+                if (dataI > dataF)
+                    tempoBW = dataI.getTime() - dataF.getTime();
+                else
+                    tempoBW = dataF.getTime() - dataI.getTime();
+                imprime_tempo(tempoBW/1000/60);
+            }
+        });
+    </script>
+</body>
+</html>
