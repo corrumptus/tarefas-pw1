@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalho final</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0px;
+            overflow: hidden;
+        }
+        body > header {
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0px;
+            background-color: skyblue;
+            user-select: none;
+        }
+        img {
+            padding-left: 10px;
+            -webkit-user-drag: none;
+            cursor: pointer;
+        }
+        section.sec-menu {
+            display: inline-flex;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+        div.container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header button {
+            background-color: #faff80;
+            box-shadow: 0px 0px 5px #ff6262;
+            color: #ad0000;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bolder;
+            padding: 10px;
+            cursor: pointer;
+        }
+        div.container:nth-child(3) button {
+            cursor: pointer;
+        }
+        div.container button:hover, div.container > ul:hover + button {
+            background-color: #ffff44;
+            color: #ff0e0e;
+            box-shadow: 0px 0px 5px #ff0000;
+        }
+        ul {
+            list-style: none;
+            margin: 0px;
+            padding: 6px;
+            position: absolute;
+            top: 40px;
+            border-radius: 10px;
+            box-shadow: inset 0px 0px 2px #0037ff;
+            opacity: 0;
+            transform: translateY(0px);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            pointer-events: none;
+            background-color: #ceffee;
+        }
+        li {
+            text-align: center;
+            margin: 2px;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 18px;
+            color: #404040;
+            text-shadow: 0px 0px 0px #404040;
+        }
+        li:nth-child(1) {
+            border-bottom: 1px solid #979797;
+        }
+        div.container > button:hover + ul, ul:hover {
+            opacity: 1;
+            transform: translateY(13px);
+            pointer-events: auto;
+        }
+        article {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: calc(100vh - 78px);
+            z-index: -2;
+            background-color: #f5f5f5;
+            color: #1f1f1f;
+            padding: 10px 0px 0px;
+            overflow: overlay;
+        }
+        article header {
+            font-size: 35px;
+            font-family: sans-serif;
+            padding: 10px;
+            text-align: center;
+        }
+        table {
+            width: fit-content;
+            font-size: 20px;
+            border-collapse: collapse;
+        }
+        th {
+            border-bottom: 2px solid #cdcdcd;
+            padding: 10px 3px;
+        }
+        td {
+            text-align: center;
+            border-top: 1px solid #bbb9b9;
+            padding: 7px 10px;
+        }
+        td button {
+            border-radius: 5px;
+            border: none;
+            padding: 6px;
+            font-size: 16px;
+            text-shadow: 0px 0px 0px #444444;
+        }
+        td button:nth-child(1) {
+            background-color: #70ff85;
+        }
+        td button:nth-child(1):hover {
+            background-color: #38ff26;
+        }
+        td button:nth-child(2) {
+            background-color: #ffff6b;
+        }
+        td button:nth-child(2):hover {
+            background-color: #fff425;
+        }
+        td button:nth-child(3) {
+            background-color: #ff8c8c;
+        }
+        td button:nth-child(3):hover {
+            background-color: #ff2f2f;
+        }
+        article#Cadastra::-webkit-scrollbar {
+            width: 8px;
+            background-color: transparent;
+        }
+        article#Cadastra::-webkit-scrollbar-thumb {
+            background-color: gray;
+            border-radius: 10px;
+        }
+        article#Cadastra section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        article#Cadastra section p {
+            margin: 7px;
+            font-size: 23px;
+        }
+        article#Cadastra section input, article#Cadastra select {
+            width: 200px;
+            height: 30px;
+            padding: 0px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #4c4c4c;
+            box-shadow: 0px 0px 5px #4c4c4c;
+        }
+        article#Cadastra section button {
+            margin: 10px 0px 0px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #4c4c4c;
+            box-shadow: 0px 0px 5px #ff0000;
+            text-shadow: 0px 0px 0px #4c4c4c;
+            font-size: 18px;
+            background-color: #95fcff;
+            color: #ff0e0e;
+        }
+        article#Cadastra section button:hover {
+            background-color: #35faff;
+        }
+        article#Lista_consultas {
+            position: absolute;
+            top: 0px;
+            height: calc(100vh - 10px);
+            background-color: #0000009c;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        article#Lista_consultas section {
+            background-color: #efef8a;
+            border: 30px solid #4c2a0f;
+            border-radius: 10px;
+            height: 80vh;
+            overflow: overlay;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        article#Lista_consultas section::-webkit-scrollbar {
+            width: 7px;
+            background-color: transparent;
+        }
+        article#Lista_consultas section::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: inset 0px 0px 3px #424242;
+        }
+        article#Lista_consultas div.container {
+            position: absolute;
+            top: 10px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        article#Lista_consultas .acima, article#Lista_consultas .embaixo {
+            display: flex;
+        }
+        article#Lista_consultas div.quadra {
+            width: 50px;
+            height: 36px;
+            background-color: gray;
+        }
+        article#Lista_consultas .acima .trian:nth-child(1) {
+            border-top: 36px solid gray;
+            border-left: 25px solid transparent;
+        }
+        article#Lista_consultas .acima .trian:nth-child(3) {
+            border-top: 36px solid gray;
+            border-right: 25px solid transparent;
+        }
+        article#Lista_consultas .embaixo .trian:nth-child(1) {
+            border-bottom: 36px solid gray;
+            border-left: 17px solid transparent;
+        }
+        article#Lista_consultas .embaixo .trian:nth-child(3) {
+            border-bottom: 36px solid gray;
+            border-right: 17px solid transparent;
+        }
+        article#Lista_consultas button:nth-child(1) {
+            background-color: #82d8e3;
+        }
+        article#Lista_consultas button:nth-child(1):hover {
+            background-color: #2260ff;
+        }
+        article#Lista_consultas button:nth-child(2) {
+            background-color: #ff8c8c;
+        }
+        article#Lista_consultas button:nth-child(2):hover {
+            background-color: #ff2f2f;
+        }
+        article#Lista_consultas th, article#Lista_consultas td {
+            border-color: #858585;
+        }
+        button {
+            user-select: none;
+        }
+        footer {
+            position: absolute;
+            bottom: -20px;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            transition: box-shadow 1.6s ease-out;
+            box-shadow: none;
+        }
+        footer img {
+            transform: translateY(0px);
+            transition: transform 1.6s ease;
+            opacity: 0.5;
+            cursor: auto;
+            padding: 0px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://wiki.teamfortress.com/w/images/5/5b/Health_particle_red.png" alt="health plus red" width="50">
+        <section class="sec-menu">
+            <div class="container">
+                <button>Paciente</button>
+                <ul>
+                    <li>Listar</li>
+                    <li>Cadastrar</li>
+                </ul>
+            </div>
+            <div class="container">
+                <button>Médico</button>
+                <ul>
+                    <li>Listar</li>
+                    <li>Cadastrar</li>
+                </ul>
+            </div>
+            <div class="container">
+                <button>Adicionar consulta</button>
+            </div>
+        </section>
+    </header>
+    <main>
+        <article id="Lista"></article>
+        <article id="Cadastra"></article>
+        <article id="Lista_consultas"></article>
+        <article id="inicialpag"></article>
+    </main>
+    <footer></footer>
+    <script>
+        let lista = document.querySelector("article#Lista");
+        let cadastra = document.querySelector("article#Cadastra");
+        let listaC = document.querySelector("article#Lista_consultas");
+        let iniPag = document.querySelector("article#inicialpag");
+        let containers = document.querySelectorAll("div.container");
+        let img = document.querySelector("img");
+        let especialidades = [];
+        
+        function Random(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function health() {
+            let footer = document.querySelector("footer");
+            footer.innerHTML = "";
+            for (let i=0;i<window.innerWidth/20-2;i++) {
+                footer.innerHTML += '<img src="https://wiki.teamfortress.com/w/images/5/5b/Health_particle_red.png" alt="health plus red" width="20">'
+            }
+            setTimeout(() => {
+                footer.style.boxShadow = "0px 0px 100px 25px red";
+                for (i of document.querySelectorAll("footer img")) {
+                    i.style.transform = `translateY(-${Random(10, 71)}px)`
+                }
+            }, 200);
+            setTimeout(() => {
+                footer.style.boxShadow = "none";
+                for (i of document.querySelectorAll("footer img")) {
+                    i.style.transform = `translateY(0px)`
+                }
+            }, 1800);
+            setTimeout(() => {
+                footer.innerHTML = "";
+                footer.style.boxShadow = "";
+            }, 3600);
+        }
+
+        function especialidade(n) {
+            for (espe of especialidades) {
+                if (n === espe[0])
+                    return espe[1];
+            }
+        }
+
+        img.addEventListener("click", () => {
+            cadastra.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            lista.style.zIndex = -2;
+            iniPag.style.zIndex = -1;
+        });
+
+        listaC.addEventListener("click", (e) => {
+            let sec = listaC.querySelector("section");
+            if (!(e.clientX > sec.offsetLeft && e.clientX < (sec.offsetLeft + sec.offsetWidth) && e.clientY > sec.offsetTop && e.clientY < (sec.offsetTop + sec.offsetHeight)))
+                listaC.style.zIndex = -2;
+        });
+
+        containers[0].querySelectorAll("li")[0].addEventListener("click", () => {
+            lista.innerHTML = `<header>Lista de pacientes</header>
+                               <span style="text-align: center;font-size: 30px;">Loading...</span>`;
+            cadastra.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            iniPag.style.zIndex = -2;
+            lista.style.zIndex = -1;
+            listarP();
+        });
+        function listarP() {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                type: "GET",
+                success: (json) => {
+                    let tabela = "";
+                    lista.innerHTML = "<header>Lista de pacientes</header>";
+                    json.map((e) => {
+                        tabela += `<tr id="${e.id}">
+                                       <td>${e.nome}</td>
+                                       <td>${e.dataNascimento}</td>
+                                       <td>${e.dataCadastro}</td>
+                                       <td>
+                                           <button>Ver consultas</button>
+                                           <button>Editar</button>
+                                           <button>Deletar</button>
+                                       </td>
+                                   </tr>`;
+                    });
+                    lista.innerHTML += `<table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Data de nascimento</th>
+                                                    <th>Data de cadastro</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${tabela}
+                                            </tbody>
+                                        </table>`;
+                    seeConsulP();
+                    editP();
+                    deleteP();
+                    health();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        }
+
+        containers[1].querySelectorAll("li")[0].addEventListener("click", () => {
+            lista.innerHTML = `<header>Lista de médicos</header>
+                               <span style="text-align: center;font-size: 30px;">Loading...</span>`;
+            cadastra.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            iniPag.style.zIndex = -2;
+            lista.style.zIndex = -1;
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/especialidades.php",
+                type: "GET",
+                success: (json) => {
+                    especialidades = [];
+                    for (e of json)
+                        especialidades.push([e.id, e.nome]);
+                    listamedicos();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        });
+        function listamedicos() {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                type: "GET",
+                success: (json) => {
+                    let tabela = "";
+                    lista.innerHTML = "<header>Lista de médicos</header>";
+                    json.map((e) => {
+                        tabela += `<tr id="${e.id}">
+                                       <td>${e.nome}</td>
+                                       <td>${especialidade(e.idEspecialidade)}</td>
+                                       <td>${e.dataCadastro}</td>
+                                       <td>
+                                           <button>Ver consultas</button>
+                                           <button>Editar</button>
+                                           <button>Deletar</button>
+                                       </td>
+                                   </tr>`;
+                    });
+                    lista.innerHTML += `<table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Especialidade</th>
+                                                    <th>Data de cadastro</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${tabela}
+                                            </tbody>
+                                        </table>`;
+                    seeConsulM();
+                    editM();
+                    deleteM();
+                    health();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        }
+
+        containers[0].querySelectorAll("li")[1].addEventListener("click", () => {
+            lista.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            iniPag.style.zIndex = -2;
+            cadastra.style.zIndex = -1;
+            cadastra.innerHTML = `<header>Cadastro de Paciente</header>
+                                  <section>
+                                      <p>Nome</p>
+                                      <input type="text">
+                                      <p>Data de nascimento</p>
+                                      <input type="date">
+                                      <button class="cad">Cadastrar</button>
+                                  </section>`;
+            cadButt();
+        });
+
+        containers[1].querySelectorAll("li")[1].addEventListener("click", () => {
+            lista.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            iniPag.style.zIndex = -2;
+            cadastra.style.zIndex = -1;
+            cadastra.innerHTML = "<header>Cadastro de Médico</header>";
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/especialidades.php",
+                type: "GET",
+                success: (json) => {
+                    especialidades = [];
+                    for (e of json)
+                        especialidades.push([e.id, e.nome]);
+                    cadmedic();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        });
+        function cadmedic() {
+            let opcoes = "";
+            for (espes of especialidades)
+                opcoes += `<option value="${espes[0]}">${espes[1]}</option>`;
+            cadastra.innerHTML += `<section>
+                                       <p>Nome</p>
+                                       <input type="text">
+                                       <p>Especialidade</p>
+                                       <select>
+                                           <option></option>
+                                           ${opcoes}
+                                       </select>
+                                       <button class="cad">Cadastrar</button>
+                                   </section>`;
+            cadButt();
+        }
+
+        containers[2].addEventListener("click", () => {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                type: "GET",
+                success: (json) => {
+                        let tabela = "";
+                        let pacientes;
+                        for (e of json)
+                            tabela += `<option value="${e.id}">${e.nome}</option>`;
+                        pacientes = `<select>
+                                         <option></option>
+                                         ${tabela}
+                                     </select>`;
+                        cadConsulListMmedic(pacientes);
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        });
+        function cadConsulListMmedic(pacientes) {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                type: "GET",
+                success: (json) => {
+                    let tabela = "";
+                    let medicos;
+                    for (e of json)
+                        tabela += `<option value="${e.id}">${e.nome}</option>`;
+                    medicos = `<select>
+                                   <option></option>
+                                   ${tabela}
+                               </select>`;
+                    cadConsul(pacientes, medicos);
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        }
+        function cadConsul(pacientes, medicos) {
+            lista.style.zIndex = -2;
+            listaC.style.zIndex = -2;
+            iniPag.style.zIndex = -2;
+            cadastra.style.zIndex = -1;
+            cadastra.innerHTML = `<header>Cadastro de Consulta</header>
+                                   <section>
+                                       <p>Paciente</p>
+                                       ${pacientes}
+                                       <p>Médico</p>
+                                       ${medicos}
+                                       <p>Data e hora da consulta</p>
+                                       <div class="datetime">
+                                           <input type="date">
+                                           <input type="time">
+                                       </div>
+                                       <button class="cad">Cadastrar</button>
+                                   </section>`;
+            cadButt();
+        }
+
+        function seeConsulP() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(1)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/consultas.php",
+                        type: "GET",
+                        success: (json) => {
+                            let list = [];
+                            let tr = e.target.parentElement.parentElement;
+                            for (ele of json) {
+                                if (ele.idPaciente == tr.id)
+                                    list.push(ele);
+                            }
+                            listaConsulP(list, tr.querySelectorAll("td")[0].innerText);
+                        },
+                        error: () => {
+                            alert("Error :(");
+                        }
+                    });
+                });
+        }
+        function listaConsulP(list, nome) {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                type: "GET",
+                success: (json) => {
+                    let tabela = "";
+                    for (consul of list)
+                        for (e of json) {
+                            if (consul.idMedico == e.id) {
+                                tabela += `<tr id="${e.id}">
+                                               <td>${e.nome}</td>
+                                               <td>${consul.data}</td>
+                                               <td>
+                                                   <button id="${consul.id}">Editar</button>
+                                                   <button id="${consul.id}">Deletar</button>
+                                               </td>
+                                           </tr>`;
+                            }
+                        }
+                    listaC.innerHTML = `<section>
+                                            <div class="container">
+                                                <div class="acima">
+                                                    <div class="trian"></div>
+                                                    <div class="quadra"></div>
+                                                    <div class="trian"></div>
+                                                </div>
+                                                <div class="embaixo">
+                                                    <div class="trian"></div>
+                                                    <div class="quadra"></div>
+                                                    <div class="trian"></div>
+                                                </div>
+                                            </div>
+                                            <header>${nome}</header>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Médico</th>
+                                                        <th>Data da consulta</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${tabela}
+                                                </tbody>
+                                            </table>
+                                        </section>`;
+                    
+                    iniPag.style.zIndex = -2;
+                    cadastra.style.zIndex = -2;
+                    listaC.style.zIndex = 1;
+                    editC();
+                    deleteC();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        }
+
+        function editP() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(2)"))
+                butt.addEventListener("click", (e) => {
+                    let infos = e.target.parentElement.parentElement.querySelectorAll("td");
+                    let id = e.target.parentElement.parentElement.id;
+                    listaC.style.zIndex = -2;
+                    iniPag.style.zIndex = -2;
+                    lista.style.zIndex = -2;
+                    cadastra.style.zIndex = -1;
+                    cadastra.innerHTML = `<header>Edição de Paciente</header>
+                                          <section>
+                                              <p>Paciente</p>
+                                              <input type="text" value="${infos[0].innerText}">
+                                              <p>Data de nascimento</p>
+                                              <input type="date" value="${infos[1].innerText}">
+                                              <button class="atu" id="${id}">Atualizar</button>
+                                          </section>`;
+                    updateButt();
+                });
+        }
+
+        function deleteP() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(3)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php?id=" + e.target.parentElement.parentElement.id,
+                        type: "DELETE",
+                        success: () => {
+                            listarP();
+                        },
+                        error: () => {
+                            alert("Error :(");
+                        }
+                    });
+                });
+        }
+
+        function seeConsulM() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(1)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/consultas.php",
+                        type: "GET",
+                        success: (json) => {
+                            let list = [];
+                            let tr = e.target.parentElement.parentElement;
+                            for (ele of json) {
+                                if (ele.idMedico == tr.id)
+                                    list.push(ele);
+                            }
+                            listaConsulM(list, tr.querySelectorAll("td")[0].innerText);
+                        },
+                        error: () => {
+                            alert("Error :(");
+                        }
+                    });
+                });
+        }
+        function listaConsulM(list, nome) {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                type: "GET",
+                success: (json) => {
+                    let tabela = "";
+                    for (consul of list) {
+                        for (e of json) {
+                            if (consul.idPaciente == e.id) {
+                                tabela += `<tr id="${e.id}">
+                                               <td>${e.nome}</td>
+                                               <td>${consul.data}</td>
+                                               <td>
+                                                   <button id="${consul.id}">Editar</button>
+                                                   <button id="${consul.id}">Deletar</button>
+                                               </td>
+                                           </tr>`;
+                            }
+                        }
+                    }
+                    listaC.innerHTML = `<section>
+                                            <div class="container">
+                                                <div class="acima">
+                                                    <div class="trian"></div>
+                                                    <div class="quadra"></div>
+                                                    <div class="trian"></div>
+                                                </div>
+                                                <div class="embaixo">
+                                                    <div class="trian"></div>
+                                                    <div class="quadra"></div>
+                                                    <div class="trian"></div>
+                                                </div>
+                                            </div>
+                                            <header>${nome}</header>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Paciente</th>
+                                                        <th>Data da consulta</th>
+                                                        <th>Ações</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${tabela}
+                                                </tbody>
+                                            </table>
+                                        </section>`;
+                    iniPag.style.zIndex = -2;
+                    cadastra.style.zIndex = -2;
+                    listaC.style.zIndex = 1;                    
+                    editC();
+                    deleteC();
+                },
+                error: () => {
+                    alert("Error :(");
+                }
+            });
+        }
+
+        function editM() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(2)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/especialidades.php",
+                        type: "GET",
+                        success: (json) => {
+                            lista.style.zIndex = -2;
+                            iniPag.style.zIndex = -2;
+                            listaC.style.zIndex = -2;
+                            cadastra.style.zIndex = -1;
+                            let especialidades = "";
+                            let infos = e.target.parentElement.parentElement.querySelectorAll("td");
+                            for (ele of json) {
+                                if (ele.nome == infos[1].innerText)
+                                    especialidades += `<option value="${ele.id}" selected>${ele.nome}</option>`;
+                                else
+                                    especialidades += `<option value="${ele.id}">${ele.nome}</option>`;
+                            }
+                            cadastra.innerHTML = `<header>Edição de Médico</header>
+                                                  <section>
+                                                      <p>Nome</p>
+                                                      <input type="text" value="${infos[0].innerText}">
+                                                      <p>Especialidade</p>
+                                                      <select>
+                                                          <option></option>
+                                                          ${especialidades}
+                                                      </select>
+                                                      <button class="atu" id="${e.target.parentElement.parentElement.id}">Atualizar</button>
+                                                  </section>`;
+                            updateButt();
+                        },
+                        error: () => {
+                            alert("Error :(");
+                        }
+                    });
+                });
+        }
+
+        function deleteM() {
+            for (butt of document.querySelectorAll("article#Lista button:nth-child(3)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php?id=" + e.target.parentElement.parentElement.id,
+                        type: "DELETE",
+                        success: () => {
+                            listamedicos();
+                        },
+                        error: () => {
+                            alert("Error :(")
+                        }
+                    });
+                });
+        }
+
+        function editC() {
+            for (butt of document.querySelectorAll("article#Lista_consultas td button:nth-child(1)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                        type: "GET",
+                        success: (json) => {
+                            let pacis = "";
+                            let infos = e.target.parentElement.parentElement;
+                            for (ele of json) {
+                                if (ele.nome == infos.querySelectorAll("td")[0].innerText)
+                                    pacis += `<option value="${ele.id}" selected>${ele.nome}</option>`;
+                                else if (ele.nome == infos.parentElement.parentElement.parentElement.querySelector("header").innerText)
+                                    pacis += `<option value="${ele.id}" selected>${ele.nome}</option>`;
+                                else
+                                    pacis += `<option value="${ele.id}">${ele.nome}</option>`;
+                            }
+                            pacis = `<select>
+                                        ${pacis}
+                                    </select>`;
+                            editCM(pacis, infos, e.target.id);
+                        },
+                        error: () => {
+                            alert("Error :(")
+                        }
+                    });
+                });
+            }
+        function editCM(pacientes, consul, id) {
+            $.ajax({
+                url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                type: "GET",
+                success: (json) => {
+                    let medicos = "";
+                    for (ele of json) {
+                        if (ele.nome == consul.querySelectorAll("td")[0].innerText)
+                            medicos += `<option value="${ele.id}" selected>${ele.nome}</option>`;
+                        else if (ele.nome == consul.parentElement.parentElement.parentElement.querySelector("header").innerText)
+                            medicos += `<option value="${ele.id}" selected>${ele.nome}</option>`;
+                        else
+                            medicos += `<option value="${ele.id}">${ele.nome}</option>`;
+                    }
+                    medicos = `<select>
+                                   ${medicos}
+                               </select>`;
+                    let datatime = consul.querySelectorAll("td")[1].innerText;
+                    let data = datatime.slice(0, datatime.indexOf(" "));
+                    let time = datatime.slice(datatime.indexOf(" ") + 1, datatime.indexOf(" ") + 6);
+                    lista.style.zIndex = -2;
+                    listaC.style.zIndex = -2;
+                    iniPag.style.zIndex = -2;
+                    cadastra.style.zIndex = -1;
+                    cadastra.innerHTML = `<header>Edição de Consulta</header>
+                                          <section>
+                                              <p>Paciente</p>
+                                              ${pacientes}
+                                              <p>Médico</p>
+                                              ${medicos}
+                                              <p>Data e hora da consulta</p>
+                                              <div class="datetime">
+                                                  <input type="date" value="${data}">
+                                                  <input type="time" value="${time}">
+                                              </div>
+                                              <button class="atu" id="${id}">Atualizar</button>
+                                          </section>`;
+                    updateButt();
+                },
+                error: () => {
+                    alert("Error :(")
+                }
+            });
+        }
+
+        function deleteC() {
+            for (butt of document.querySelectorAll("article#Lista_consultas td button:nth-child(2)"))
+                butt.addEventListener("click", (e) => {
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/consultas.php?id=" + e.target.id,
+                        type: "DELETE",
+                        success: () => {
+                            e.target.parentElement.parentElement.outerHTML = '';
+                        },
+                        error: () => {
+                            alert("Error :(")
+                        }
+                    });
+                });
+        }
+
+        function cadButt() {
+            let cad = document.querySelector("article#Cadastra button.cad");
+            cad.addEventListener("click", () => {
+                let cadastro = document.querySelector("article#Cadastra header").innerText[12];
+                if (cadastro == 'P') {
+                    let nome = document.querySelector("article#Cadastra section input[type=text]");
+                    let data = document.querySelector("article#Cadastra section input[type=date]");
+                    if (nome.value && (new Date(data.value + "T00:00:00").getTime() < (new Date().getTime() + 3600000)))
+                        $.ajax({
+                            url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                            type: "POST",
+                            data: {
+                                nome: nome.value,
+                                dataNascimento: data.value
+                            },
+                            success: () => {
+                                nome.value = "";
+                                data.value = "";
+                            },
+                            error: () => {
+                                alert("Error :(")
+                            }
+                        });
+                }
+                if (cadastro == 'M') {
+                    let nome = document.querySelector("article#Cadastra section input[type=text]");
+                    let espe = document.querySelector("article#Cadastra section select");
+                    if (nome.value && espe.value)
+                        $.ajax({
+                            url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                            type: "POST",
+                            data: {
+                                nome: nome.value,
+                                idEspecialidade: espe.value
+                            },
+                            success: () => {
+                                nome.value = "";
+                                espe.value = "";
+                            },
+                            error: () => {
+                                alert("Error :(")
+                            }
+                        });
+                }
+                if (cadastro == 'C') {
+                    let paci = document.querySelectorAll("article#Cadastra section select")[0];
+                    let medic = document.querySelectorAll("article#Cadastra section select")[1];
+                    let date = document.querySelector("article#Cadastra section input[type=date]");
+                    let time = document.querySelector("article#Cadastra section input[type=time]");
+                    let nasci = new Date(date.value + "T" + time.value).getTime()
+                    if (paci.value && medic.value && (nasci > (new Date().getTime() + 3600000)))
+                        $.ajax({
+                            url: "https://tiagoifsp.ddns.net/clinicaMedica/consultas.php",
+                            type: "POST",
+                            data: {
+                                idPaciente: paci.value,
+                                idMedico: medic.value,
+                                data: date.value + " " + time.value
+                            },
+                            success: () => {
+                                paci.value = "";
+                                medic.value = "";
+                                date.value = "";
+                                time.value = "";
+                            },
+                            error: () => {
+                                alert("Error :(")
+                            }
+                        });
+                }                    
+            });
+        }
+
+        function updateButt() {
+            let up = document.querySelector("article#Cadastra section button.atu");
+            up.addEventListener("click", (e) => {
+                let update = document.querySelector("article#Cadastra header").innerText[10];
+                if (update == 'P') {
+                    let nome = document.querySelector("article#Cadastra section input[type=text]");
+                    let data = document.querySelector("article#Cadastra section input[type=date]");
+                    if (nome.value && (new Date(data.value + "T00:00:00").getTime() < (new Date().getTime() + 3600000)))
+                        $.ajax({
+                            url: "https://tiagoifsp.ddns.net/clinicaMedica/pacientes.php",
+                            type: "PUT",
+                            data: {
+                                id: e.target.id,
+                                nome: nome.value,
+                                dataNascimento: data.value
+                            },
+                            success: () => {
+                                nome.value = "";
+                                data.value = "";
+                                lista.style.zIndex = -1;
+                                cadastra.style.zIndex = -2;
+                            },
+                            error: () => {
+                                alert("Error :(")
+                            }
+                        });
+                }
+                if (update == 'M') {
+                    let nome = document.querySelector("article#Cadastra section input[type=text]");
+                    let espe = document.querySelector("article#Cadastra section select");
+                    console.log(e.target.id);
+                    console.log(nome.value);
+                    console.log(espe.value);
+                    if (nome.value && espe.value)
+                        $.ajax({
+                            url: "https://tiagoifsp.ddns.net/clinicaMedica/medicos.php",
+                            type: "PUT",
+                            data: {
+                                id: e.target.id,
+                                nome: nome.value,
+                                idEspecialidade: espe.value
+                            },
+                            success: () => {
+                                nome.value = "";
+                                espe.value = "";
+                                lista.style.zIndex = -1;
+                                cadastra.style.zIndex = -2;
+                            },
+                            error: () => {
+                                alert("Error :(")
+                            }
+                        });
+                }
+                if (update == 'C') {
+                    let paci = document.querySelectorAll("article#Cadastra section select")[0];
+                    let medic = document.querySelectorAll("article#Cadastra section select")[1];
+                    let date = document.querySelector("article#Cadastra section input[type=date]");
+                    let time = document.querySelector("article#Cadastra section input[type=time]");
+                    console.log(e.target.id);
+                    console.log(paci.value);
+                    console.log(medic.value);
+                    console.log(date.value);
+                    console.log(time.value);
+                    $.ajax({
+                        url: "https://tiagoifsp.ddns.net/clinicaMedica/consultas.php",
+                        type: "PUT",
+                        data: {
+                            id: e.target.id,
+                            idPaciente: paci.value,
+                            idMedico: medic.value,
+                            data: date.value + " " + time.value
+                        },
+                        success: () => {
+                            paci.value = "";
+                            medic.value = "";
+                            date.value = "";
+                            time.value = "";
+                            lista.style.zIndex = -1;
+                            cadastra.style.zIndex = -2;
+                        },
+                        error: () => {
+                            alert("Error :(")
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
